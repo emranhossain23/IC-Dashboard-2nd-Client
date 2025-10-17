@@ -1,0 +1,95 @@
+import React from "react";
+import dashIcon from "../../assets/logo-with-text.png";
+import userPlaceholder from "../../assets/unknown_person.jpg";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { FaAngleDown } from "react-icons/fa";
+import { LiaUser } from "react-icons/lia";
+import { IoLogOutOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import ClientSelector from "../../component/ClientSelector/ClientSelector";
+import logoSml from "../../assets/imgi_1_logo_icon.png";
+
+const Header = ({ toggle, setToggle }) => {
+  return (
+    <div className="bg-[#1A4BD2] py-2 mb-1 h-[64px] w-screen absolute top-0 left-0 z-50 flex items-center">
+      <div
+        className={`${
+          toggle ? "w-20" : "w-64"
+        } transition-all duration-300 relative h-full`}
+      >
+        {/* big logo */}
+        <img
+          src={dashIcon}
+          alt="Full Logo"
+          className={`absolute left-1/2 -translate-x-1/2 w-[130px] h-[50px] brightness-0 invert 
+      transition-all duration-300 ease-in-out 
+      ${toggle ? "opacity-0 scale-0" : "opacity-100 scale-100"}`}
+        />
+
+        {/* small logo */}
+        <img
+          src={logoSml}
+          alt="Small Logo"
+          className={`absolute left-1/2 -translate-x-1/2 w-7 h-7 top-1/2 -translate-y-1/2 brightness-0 invert 
+      transition-all duration-300 ease-in-out 
+      ${toggle ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+        />
+      </div>
+
+      <div className="flex items-center justify-between flex-1 px-4">
+        <button
+          onClick={() => setToggle(!toggle)}
+          className="p-3 rounded-full hover:bg-[#2E5DDE] text-white scale-100 active:scale-95 transition duration-200"
+        >
+          <RxHamburgerMenu
+            ize={20}
+            className="w-5 h-5 text-white"
+          ></RxHamburgerMenu>
+        </button>
+
+        <div className="flex items-center gap-3">
+          <ClientSelector></ClientSelector>
+
+          {/* profile */}
+          <div className="relative cursor-pointer group">
+            <div className="flex items-center gap-1">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                <img
+                  className="rounded-full w-full h-full"
+                  src={userPlaceholder}
+                  alt="userPlaceholder"
+                />
+              </div>
+              <FaAngleDown className="text-white group-hover:rotate-180 transition duration-200" />
+            </div>
+
+            <ul className="absolute top-12 right-0 bg-white rounded-lg p-1 scale-y-0 group-hover:scale-y-100 transition duration-200 origin-top z-50 shadow-md">
+              <li className="px-2 py-2 border-b mb-1 flex justify-center cursor-not-allowed">
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm">
+                    Super Admin
+                  </h4>
+                  <p className="text-sm text-gray-500 truncate">
+                    admin@dim.com
+                  </p>
+                </div>
+              </li>
+
+              <li className="flex items-center gap-2 w-[150px] px-2 py-1 text-sm hover:bg-gray-100 rounded-md text-primary">
+                <LiaUser />
+                <Link>Edit Profile</Link>
+              </li>
+
+              <li className="flex items-center gap-2 w-[150px] px-2 py-1 text-sm hover:bg-gray-100 rounded-md text-primary">
+                <IoLogOutOutline />
+                <Link>Logout</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Header;
