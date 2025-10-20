@@ -11,7 +11,7 @@ import logoSml from "../../assets/imgi_1_logo_icon.png";
 
 const Header = ({ toggle, setToggle }) => {
   return (
-    <div className="bg-[#1A4BD2] py-2 mb-1 h-[64px] w-screen absolute top-0 left-0 z-50 flex items-center">
+    <div className="bg-[#1A4BD2] py-2 mb-1 h-[64px] w-screen top-0 left-0 z-50 flex items-center fixed">
       <div
         className={`${
           toggle ? "w-20" : "w-64"

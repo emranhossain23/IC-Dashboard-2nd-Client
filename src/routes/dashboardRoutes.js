@@ -3,6 +3,9 @@ import { CiBellOn, CiSettings } from "react-icons/ci";
 import { FaRegFileAlt } from "react-icons/fa";
 import { GoBell } from "react-icons/go";
 import { IoSettingsOutline } from "react-icons/io5";
+import { LiaUser } from "react-icons/lia";
+import { LuShieldCheck } from "react-icons/lu";
+import { RiFileSettingsLine } from "react-icons/ri";
 
 export const dashboardRoutes = [
   {
@@ -24,5 +27,22 @@ export const dashboardRoutes = [
     label: "Admin",
     icon: IoSettingsOutline,
     path: "admin",
+    children: [
+      {
+        label: "Users",
+        icon: LiaUser,
+        path: "users",
+      },
+      {
+        label: "Roles",
+        icon: LuShieldCheck,
+        path: "roles",
+      },
+      {
+        label: "Row Level Settings",
+        icon: RiFileSettingsLine,
+        path: "row-level-settings",
+      },
+    ],
   },
 ];

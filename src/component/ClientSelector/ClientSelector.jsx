@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FaAngleDown } from "react-icons/fa";
 import { HiOutlineSearch } from "react-icons/hi";
@@ -81,11 +82,11 @@ const ClientSelector = () => {
             {/* Search */}
             <div className="relative mb-2 m-1">
               <input
-                type="text"
+                type="search"
                 placeholder="Search clients..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-8 border rounded-md py-2 pl-8 text-sm outline-none focus:ring-1 focus:border-transparent focus:ring-[#1677FF] hover:border-[#1677FF] transition duration-150"
+                className="w-full h-8 border rounded-md pt-2 pb-3 pl-8 text-sm outline-none placeholder:text-[13px] focus:ring-1 focus:border-transparent focus:ring-[#1677FF] hover:border-[#1677FF] transition duration-150"
               />
               <HiOutlineSearch
                 size={15}
