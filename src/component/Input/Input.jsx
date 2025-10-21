@@ -24,11 +24,13 @@ const Input = ({ label, name, type, placeholder, form, required }) => {
         onBlur={handleBlur}
         value={values[name] || ""}
         className={`input ${
-          errors[name] && touched[name] ? "border-red-500" : ""
+          errors[name] && (touched[name] || values[name])
+            ? "border-red-500"
+            : ""
         }`}
       />
 
-      {errors[name] && touched[name] && (
+       {errors[name] && (touched[name] || values[name]) && (
         <div className="text-sm text-red-500">{errors[name]}</div>
       )}
     </div>

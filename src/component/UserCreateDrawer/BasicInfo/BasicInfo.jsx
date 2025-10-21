@@ -3,7 +3,7 @@ import Input from "../../Input/Input";
 
 const BasicInfo = ({ form }) => {
   return (
-    <div className="grid grid-cols-2 gap-y-10 gap-x-6">
+    <div className="form">
       <Input
         name={"first_name"}
         label={"First Name"}
@@ -37,7 +37,7 @@ const BasicInfo = ({ form }) => {
 
       <Input
         label={"Date of Birth"}
-        name={"date-of-birth"}
+        name={"date_of_birth"}
         type={"date"}
         form={form}
         placeholder={"Select date"}
