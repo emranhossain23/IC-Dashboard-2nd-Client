@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dashIcon from "../../assets/logo-with-text.png";
 import userPlaceholder from "../../assets/unknown_person.jpg";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -10,6 +10,29 @@ import ClientSelector from "../../component/ClientSelector/ClientSelector";
 import logoSml from "../../assets/imgi_1_logo_icon.png";
 
 const Header = ({ toggle, setToggle }) => {
+  const [open, setOpen] = useState(false);
+  const [clients, setClients] = useState([]);
+  const [selectedClients, setSelectedClients] = useState([]);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const demoClients = Array.from({ length: 896 }, (_, i) => ({
+      id: i + 1,
+      name: `Client ${i + 1}`,
+    }));
+    setClients(demoClients);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="bg-[#1A4BD2] py-2 mb-1 h-[64px] w-screen top-0 left-0 z-50 flex items-center fixed">
       <div
@@ -48,8 +71,30 @@ const Header = ({ toggle, setToggle }) => {
         </button>
 
         <div className="flex items-center gap-3">
-          <ClientSelector></ClientSelector>
+          <div className="relative" ref={dropdownRef}>
+            {/* Navbar Button */}
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-2 bg-[#2E5DDE] text-white text-sm px-6 py-1.5 rounded-md hover:bg-white hover:text-[#2E5DDE] transition duration-300"
+            >
+              {selectedClients.length} clients selected{" "}
+              <FaAngleDown
+                className={`${
+                  open ? "rotate-180" : "rotate-0"
+                } transition duration-200`}
+              />
+            </button>
 
+            <div className="absolute top-10 right-0">
+              <ClientSelector
+                open={open}
+                clients={clients}
+                selectedClients={selectedClients}
+                setSelectedClients={setSelectedClients}
+              ></ClientSelector>
+            </div>
+          </div>
+          
           {/* profile */}
           <div className="relative cursor-pointer group">
             <div className="flex items-center gap-1">

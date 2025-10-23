@@ -6,9 +6,13 @@ import { userInitialValues } from "../../schema/user/userInitialValues";
 import BasicInfo from "./BasicInfo/BasicInfo";
 import AddressInfo from "./AddressInfo/AddressInfo";
 import { GiCheckMark } from "react-icons/gi";
+import RolesAndPermissions from "./RolesAndPermissions/RolesAndPermissions";
+import ClientAssignment from "./ClientAssignment/ClientAssignment";
 
 const UserCreateDrawer = ({ open, onClose }) => {
   const [step, setStep] = useState(1);
+  const [date, setDate] = useState(new Date());
+  const [selectedClients, setSelectedClients] = useState([]);
 
   // Disable body scroll when drawer is open
   useEffect(() => {
@@ -41,7 +45,7 @@ const UserCreateDrawer = ({ open, onClose }) => {
   const handlePrevious = () => setStep((prev) => prev - 1);
 
   const handleSubmit = (values) => {
-    console.log("✅ Final Values:", values);
+    console.log("✅ Final Values:", { ...values, clients: selectedClients });
     alert("User created successfully!");
   };
 
@@ -86,9 +90,7 @@ const UserCreateDrawer = ({ open, onClose }) => {
           <div></div>
         </div>
 
-        {/*  */}
         <div className="bg-white m-6 p-6 rounded-md shadow-md min-h- verflow-y-auto">
-
           <ul className="flex items-center justify-between md:flex-wrap md:gap-4 lg:flex-nowrap">
             {navOptions.map((option, idx) => (
               <li key={idx} className="flex items-center w-full">
@@ -96,7 +98,7 @@ const UserCreateDrawer = ({ open, onClose }) => {
                   <div
                     className={`w-8 h-8 flex items-center justify-center ${
                       idx + 1 < step
-                        ? "bg-[#E6F4FF] text-blue-500"
+                        ? "bg-[#E6F4FF] text-[rgb(38,102,192)]"
                         : idx + 1 === step
                         ? "bg-blue-500 text-white"
                         : "bg-[#F0F0F0]"
@@ -114,17 +116,30 @@ const UserCreateDrawer = ({ open, onClose }) => {
               </li>
             ))}
           </ul>
-
           <Formik
             initialValues={userInitialValues}
-            validationSchema={userValidationSchema[step]}
-            onSubmit={handleSubmit}
+            validationSchema={userValidationSchema[step] || null}
             validateOnChange={true}
+            onSubmit={(values, formikHelpers) => {
+              if (step < 4) {
+                handleNext(formikHelpers);
+              } else {
+                handleSubmit(values);
+              }
+            }}
           >
             {(form) => (
-              <Form className="space-y-3 mt-6">
-                {step === 1 && <BasicInfo form={form}></BasicInfo>}
-                {step === 2 && <AddressInfo form={form}></AddressInfo>}
+              <Form className="space-y-3 mt-6 min-h-[572px] flex flex-col justify-between">
+                {step === 1 && <BasicInfo form={form} />}
+                {step === 2 && <AddressInfo form={form} />}
+                {step === 3 && <RolesAndPermissions form={form} />}
+                {step === 4 && (
+                  <ClientAssignment
+                    form={form}
+                    selectedClients={selectedClients}
+                    setSelectedClients={setSelectedClients}
+                  />
+                )}
 
                 <div className="flex items-center justify-between pt-10">
                   <div className="space-x-2.5">
@@ -136,9 +151,11 @@ const UserCreateDrawer = ({ open, onClose }) => {
                     >
                       Previous
                     </button>
+
                     <button
                       type="button"
-                      className="h-9 px-4 border rounded-md g-black/5 text-sm text-[rgb(89,89,89)] font-medium hover:text-[#1677ff] hover:border-[#1677ff] transition-all duration-200 shadow-sm"
+                      onClick={onClose}
+                      className="h-9 px-4 border rounded-md bg-black/5 text-sm text-[rgb(89,89,89)] font-medium hover:text-[#1677ff] hover:border-[#1677ff] transition-all duration-200 shadow-sm"
                     >
                       Cancel
                     </button>
@@ -146,8 +163,7 @@ const UserCreateDrawer = ({ open, onClose }) => {
 
                   {step < 4 ? (
                     <button
-                      type="button"
-                      onClick={() => handleNext(form)}
+                      type="submit"
                       className="h-9 px-4 border rounded-md bg-[#52C31A] text-sm text-white font-medium hover:bg-[#1677ff] hover:border-[#1677ff] transition-all duration-200 shadow-sm"
                     >
                       Next

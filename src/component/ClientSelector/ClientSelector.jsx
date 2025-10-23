@@ -1,37 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FaAngleDown } from "react-icons/fa";
 import { HiOutlineSearch } from "react-icons/hi";
 import CustomCheckbox from "../CustomCheckbox/CustomCheckbox";
 
-const ClientSelector = () => {
-  const [open, setOpen] = useState(false);
+const ClientSelector = ({
+  open,
+  clients,
+  selectedClients,
+  setSelectedClients,
+}) => {
   const [search, setSearch] = useState("");
-  const [clients, setClients] = useState([]);
-  const [selectedClients, setSelectedClients] = useState([]);
 
-  const dropdownRef = useRef(null);
 
-  // Demo data
-  useEffect(() => {
-    const demoClients = Array.from({ length: 896 }, (_, i) => ({
-      id: i + 1,
-      name: `Client ${i + 1}`,
-    }));
-    setClients(demoClients);
-  }, []);
 
-  // Close dropdown if clicked outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Filter clients
   const filteredClients = clients.filter((c) =>
@@ -54,20 +37,7 @@ const ClientSelector = () => {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Navbar Button */}
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-2 bg-[#2E5DDE] text-white text-sm px-6 py-1.5 rounded-md hover:bg-white hover:text-[#2E5DDE] transition duration-300"
-      >
-        {selectedClients.length} clients selected{" "}
-        <FaAngleDown
-          className={`${
-            open ? "rotate-180" : "rotate-0"
-          } transition duration-200`}
-        />
-      </button>
-
+    <div>
       {/* Dropdown Box */}
       <AnimatePresence>
         {open && (
@@ -77,7 +47,7 @@ const ClientSelector = () => {
             exit={{ opacity: 0, scaleY: 0 }}
             transition={{ duration: 0.25 }}
             style={{ originY: 0 }}
-            className="absolute top-10 right-0 w-[575px] h-[300px] overflow-y-auto bg-white shadow-xl border rounded-lg p-2 z-50"
+            className="w-[575px] h-[300px] overflow-y-auto bg-white shadow-xl border rounded-lg p-2 z-50"
           >
             {/* Search */}
             <div className="relative mb-2 m-1">
@@ -147,4 +117,4 @@ const ClientSelector = () => {
   );
 };
 
-export default ClientSelector
+export default ClientSelector;

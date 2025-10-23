@@ -3,7 +3,7 @@ export const userInitialValues = {
   last_name: "",
   email: "",
   phone: "",
-  date_of_birth: "",
+  date_of_birth: null,
   isActive: true,
 
   address_line_1: "",
@@ -12,5 +12,5 @@ export const userInitialValues = {
   province: "",
   postal_code: "",
 
-  
+  role: "",
 };

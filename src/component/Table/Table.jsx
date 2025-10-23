@@ -149,7 +149,7 @@ const Table = ({ columns, data }) => {
           onChange={(e) => {
             table.setPageSize(Number(e.target.value));
           }}
-          className="h-9 bg-transparent border px-1.5 rounded shadow-sm text-sm text-[rgb(107,107,107)] outline-none"
+          className="h-9 bg-transparent border px-1.5 rounded shadow-sm text-sm text-[rgb(107,107,107)] outline-none w-fit"
         >
           {[10, 20, 30, 50, 100].map((pageSize) => (
             <option key={pageSize} value={pageSize}>

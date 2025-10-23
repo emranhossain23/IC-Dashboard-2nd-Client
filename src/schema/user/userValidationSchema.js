@@ -1,3 +1,4 @@
+import { subYears } from "date-fns";
 import * as Yup from "yup";
 
 const userValidationSchema = {
@@ -26,6 +27,13 @@ const userValidationSchema = {
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         "Please enter a valid email address."
       ),
+
+    date_of_birth: Yup.date()
+      .nullable()
+      .notRequired()
+      .typeError("Invalid date")
+      .max(subYears(new Date(), 18), "You must be at least 18 years old")
+      .min(new Date("1900-01-01"), "Date is too far in the past"),
   }),
 
   2: Yup.object({
@@ -50,8 +58,10 @@ const userValidationSchema = {
     ),
   }),
 
-  3: Yup.object({}),
-  
+  3: Yup.object({
+    role: Yup.string().required("Role is required"),
+  }),
+
   4: Yup.object({}),
 };
 
