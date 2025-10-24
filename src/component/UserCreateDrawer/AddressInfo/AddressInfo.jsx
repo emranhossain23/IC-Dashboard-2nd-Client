@@ -63,7 +63,7 @@ const AddressInfo = ({ form }) => {
           </SelectTrigger>
           <SelectContent>
             {usStates.map((d, idx) => (
-              <SelectItem key={idx} value={d.name}>
+              <SelectItem key={idx} value={d.code}>
                 {d.name}({d.code})
               </SelectItem>
             ))}

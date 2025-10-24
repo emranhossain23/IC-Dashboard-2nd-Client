@@ -4,7 +4,7 @@ export const userInitialValues = {
   email: "",
   phone: "",
   date_of_birth: null,
-  isActive: true,
+  status: true,
 
   address_line_1: "",
   address_line_2: "",

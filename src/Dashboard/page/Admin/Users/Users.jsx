@@ -7,25 +7,40 @@ import Table from "../../../../component/Table/Table";
 import { createColumnHelper } from "@tanstack/react-table";
 import UserCreateDrawer from "../../../../component/UserCreateDrawer/UserCreateDrawer";
 import Drawer from "../../../../component/UserCreateDrawer/UserCreateDrawer";
+import useGetSecureData from "@/hooks/useGetSecureData";
+import { CiEdit } from "react-icons/ci";
+import { AiOutlineDelete } from "react-icons/ai";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import toast from "react-hot-toast";
+import { userInitialValues } from "@/schema/user/userInitialValues";
 
 const Users = () => {
   const columnHelper = createColumnHelper();
   const [open, setOpen] = useState(false);
+  const axiosSecure = useAxiosSecure();
+  const [initialSchema, setInitialSchema] = useState({});
+  const { data: users, refetch: refetch_users } = useGetSecureData(
+    "users",
+    "/users"
+  );
+  // console.log(users);
 
-  const data = [];
+  const { mutateAsync: user_delete } = useMutation({
+    mutationFn: async (id) => {
+      const { data } = await axiosSecure.delete(`/delete-user/${id}`);
+      return data;
+    },
+    onSuccess: () => {
+      refetch_users();
+      toast.success("User deleted Successfully");
+    },
+    onError: () => {
+      toast.error("Try again");
+    },
+  });
 
-  for (let x = 0; x < 20; x++) {
-    data.push({
-      name: `rafi ${x}`,
-      email: `khan.Mohammad@Rafi.com`,
-      age: 20 + x,
-      location: `${x + x} vcs`,
-      role: "admin",
-      phone: `0178888888${x}`,
-      status: "Active",
-      created: "10/03/2025",
-    });
-  }
+  // console.log(selectedUserInfo);
 
   const columns = [
     columnHelper.accessor("name", {
@@ -36,35 +51,80 @@ const Users = () => {
             <h4 className="text-[rgb(17,24,39)] font-medium text-sm">
               {row.name}
             </h4>
-            <p>{row.email}</p>
+            <p className="text-sm">{row.email}</p>
           </div>
         );
       },
       header: "Name",
     }),
-    columnHelper.accessor("age", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Age",
-    }),
-    columnHelper.accessor("location", {
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "location",
-    }),
+
     columnHelper.accessor("role", {
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "role",
+      header: "Role",
     }),
+
     columnHelper.accessor("phone", {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "phone",
     }),
-    columnHelper.accessor("status", {
-      cell: (info) => <span>{info.getValue()}</span>,
+
+    columnHelper.accessor("_id", {
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <div className="flex items-center gap-0.5">
+            <h6>{row.city},</h6>
+            <span>{row.province}</span>
+          </div>
+        );
+      },
+      header: "Location",
+      id: "location",
+    }),
+
+    columnHelper.accessor("isActive", {
+      cell: (info) =>
+        info.getValue() && (
+          <span className="border border-green-300 text-xs px-3 py-1.5 rounded-md bg-[#F6FFED] text-green-400">
+            Active
+          </span>
+        ),
       header: "Status",
     }),
-    columnHelper.accessor("created", {
-      cell: (info) => <span>{info.getValue()}</span>,
+
+    columnHelper.accessor("createdAt", {
+      cell: (info) => (
+        <span>{new Date(info.getValue()).toLocaleDateString()}</span>
+      ),
       header: "Created",
+    }),
+
+    columnHelper.accessor("_id", {
+      cell: (info) => {
+        const { _id, ...data } = info.row.original;
+
+        return (
+          <div className="space-x-2.5">
+            <button
+              onClick={() => {
+                setOpen(true);
+                setInitialSchema(data);
+              }}
+              className="text-green-500 hover:bg-green-100 rounded-md p-1"
+            >
+              <CiEdit />
+            </button>
+            <button
+              onClick={() => user_delete(_id)}
+              className="text-red-500 hover:bg-red-100 rounded-md p-1"
+            >
+              <AiOutlineDelete />
+            </button>
+          </div>
+        );
+      },
+      header: "Actions",
+      id: "action",
     }),
   ];
 
@@ -100,7 +160,10 @@ const Users = () => {
             </form>
 
             <button
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                setOpen(true);
+                setInitialSchema(userInitialValues);
+              }}
               className="flex items-center gap-1 border rounded-full px-4 py-1.5 text-sm bg-[#247CFF] text-white"
             >
               <GoPlus /> Add User
@@ -108,11 +171,13 @@ const Users = () => {
           </div>
         </div>
 
-        <Table columns={columns} data={data}></Table>
+        <Table key={"all-users"} columns={columns} data={users}></Table>
 
         <UserCreateDrawer
           open={open}
           onClose={() => setOpen(false)}
+          refetch_users={refetch_users}
+          initialValues={initialSchema}
         ></UserCreateDrawer>
       </div>
     </div>
