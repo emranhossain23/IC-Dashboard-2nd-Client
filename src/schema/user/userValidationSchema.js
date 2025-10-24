@@ -60,6 +60,34 @@ const userValidationSchema = {
 
   3: Yup.object({
     role: Yup.string().required("Role is required"),
+     permissions: Yup.object()
+      .test(
+        "at-least-one",
+        "At least one permission must be selected",
+        (permissions) => {
+          if (!permissions) return false;
+
+          // Check top-level permissions
+          const topLevel = [
+            "dashboard",
+            "admin",
+            "amberAlerts",
+            "masterReport",
+          ];
+          const topSelected = topLevel.some((key) => permissions[key]);
+
+          // Check sub-permissions
+          const dashboardSubsSelected = Object.values(
+            permissions.dashboardSubs || {}
+          ).some(Boolean);
+          const adminSubsSelected = Object.values(
+            permissions.adminSubs || {}
+          ).some(Boolean);
+
+          return topSelected || dashboardSubsSelected || adminSubsSelected;
+        }
+      )
+      .required("Permissions are required"),
   }),
 
   4: Yup.object({}),

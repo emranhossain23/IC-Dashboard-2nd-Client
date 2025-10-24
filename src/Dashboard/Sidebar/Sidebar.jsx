@@ -19,7 +19,7 @@ const Sidebar = ({ toggle }) => {
         <nav>
           <ul className="space-y-1">
             {dashboardRoutes.map((rout, idx) => (
-              <li>
+              <li key={idx}>
                 {rout?.children ? (
                   <div className="flex flex-col w-full relative">
                     <button
@@ -72,6 +72,7 @@ const Sidebar = ({ toggle }) => {
                     >
                       {rout?.children?.map((c, idx) => (
                         <li
+                          key={idx}
                           className={`${toggle ? "opacity-0" : "opacity-100"}`}
                         >
                           <MenuItem

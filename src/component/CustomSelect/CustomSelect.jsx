@@ -20,7 +20,7 @@ const CustomSelect = ({
     <>
       <Select
         onValueChange={(value) => {
-          setFieldValue(name, value), handleRoleChange(value);
+          setFieldValue(name, value); handleRoleChange(value); 
         }}
         value={values[name]}
       >

@@ -1,5 +1,13 @@
+import CustomSelect from "@/component/CustomSelect/CustomSelect";
 import { usStates } from "../../../data/state";
 import Input from "../../Input/Input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AddressInfo = ({ form }) => {
   return (
@@ -29,7 +37,7 @@ const AddressInfo = ({ form }) => {
         <label htmlFor="state" className="label-inline">
           State/Province
         </label>
-        <select name="province" defaultValue="" className="p-0 text-sm">
+        {/* <select name="province" defaultValue="" className="p-0 text-sm">
           <option value="" disabled>
             Select state/province
           </option>
@@ -42,7 +50,32 @@ const AddressInfo = ({ form }) => {
               {province.name} ({province.code})
             </option>
           ))}
-        </select>
+        </select> */}
+
+        <Select
+          onValueChange={(value) => {
+            form.setFieldValue("province", value);
+          }}
+          value={form.values.province}
+        >
+          <SelectTrigger id="province" className="w-full">
+            <SelectValue placeholder={"Select state/province"} />
+          </SelectTrigger>
+          <SelectContent>
+            {usStates.map((d, idx) => (
+              <SelectItem key={idx} value={d.name}>
+                {d.name}({d.code})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {form.errors.province &&
+          (form.touched.province || form.values.province) && (
+            <div className="text-sm text-red-500 mt-1.5">
+              {form.errors.province}
+            </div>
+          )}
       </div>
 
       <Input

@@ -8,12 +8,14 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import ClientSelector from "../../component/ClientSelector/ClientSelector";
 import logoSml from "../../assets/imgi_1_logo_icon.png";
+import useAuth from "@/hooks/useAuth";
 
 const Header = ({ toggle, setToggle }) => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
   const dropdownRef = useRef(null);
+  const { user, logOut } = useAuth();
 
   useEffect(() => {
     const demoClients = Array.from({ length: 896 }, (_, i) => ({
@@ -94,7 +96,7 @@ const Header = ({ toggle, setToggle }) => {
               ></ClientSelector>
             </div>
           </div>
-          
+
           {/* profile */}
           <div className="relative cursor-pointer group">
             <div className="flex items-center gap-1">
@@ -127,7 +129,7 @@ const Header = ({ toggle, setToggle }) => {
 
               <li className="flex items-center gap-2 w-[150px] px-2 py-1 text-sm hover:bg-gray-100 rounded-md text-primary">
                 <IoLogOutOutline />
-                <Link>Logout</Link>
+                <button onClick={logOut}>Logout</button>
               </li>
             </ul>
           </div>

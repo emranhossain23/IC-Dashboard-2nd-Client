@@ -6,11 +6,17 @@ import AmberAlerts from "../Dashboard/page/AmberAlerts/AmberAlerts";
 import Users from "../Dashboard/page/Admin/Users/Users";
 import Roles from "../Dashboard/page/Admin/Roles/Roles";
 import RowSettings from "../Dashboard/page/Admin/RowSettings/RowSettings";
+import Login from "@/Login/Login";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardLayout></DashboardLayout>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <Home></Home> },
       {
@@ -34,5 +40,9 @@ export const router = createBrowserRouter([
         element: <RowSettings></RowSettings>,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login></Login>,
   },
 ]);

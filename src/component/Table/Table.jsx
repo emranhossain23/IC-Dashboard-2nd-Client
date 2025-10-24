@@ -107,7 +107,7 @@ const Table = ({ columns, data }) => {
             <IoIosArrowBack />
           </button>
           <span className="border w-[26px] h-[26px] flex items-center justify-center rounded-md bg-[#1A4BD2] text-white text-sm">
-            {pageIndex}
+            {pageIndex + 1}
           </span>
           <button
             onClick={() => {

@@ -13,4 +13,19 @@ export const userInitialValues = {
   postal_code: "",
 
   role: "",
+
+  permissions: {
+    selectAll: false,
+    dashboard: false,
+    dashboardSubs: {
+      leadsOverTime: false,
+      goalAchievement: false,
+      masterReportOverview: false,
+    },
+    admin: false,
+    adminSubs: { users: false, roles: false, rowLevelSettings: false },
+    amberAlerts: false,
+    masterReport: false,
+  },
+  selectedClients: [],
 };
