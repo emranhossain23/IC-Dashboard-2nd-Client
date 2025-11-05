@@ -105,18 +105,18 @@ const Home = () => {
   //   avgTxValue: 25000, // number (optional)
   // };
 
-  const post_clinic = async (info) => {
-    try {
-      const result = await add_clinic({
-        clinicId: "69024c7ac065778ecb925f89",
-        year: 2010,
-        month: 2,
-      });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const post_clinic = async (info) => {
+  //   try {
+  //     const result = await add_clinic({
+  //       clinicId: "69024c7ac065778ecb925f89",
+  //       year: 2010,
+  //       month: 2,
+  //     });
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   function makeReport(data) {
     // Initialize metrics
@@ -401,7 +401,7 @@ const Home = () => {
     <div>
       <div className="flex items-center justify-between bg-white p-6 rounded-md shadow-sm mb-6">
         <h4 className="font-medium text-lg">2262 clients selected</h4>
-        <button onClick={() => post_clinic()}>calender</button>
+        <button>calender</button>
       </div>
       {/* KPIs */}
       {!!permissions?.dashboard && (
