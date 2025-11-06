@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import dashIcon from "../../assets/logo-with-text.png";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaAngleDown } from "react-icons/fa";
 import { LiaUser } from "react-icons/lia";
