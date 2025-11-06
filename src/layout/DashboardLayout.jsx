@@ -13,8 +13,8 @@ const DashboardLayout = () => {
       <Header toggle={toggle} setToggle={setToggle}></Header>
 
       {/* sidebar */}
-      <div className="mt-[70px] z-50 fixed">
-        <Sidebar toggle={toggle}></Sidebar>
+      <div className="mt-[65px] md:mt-[70px] z-50 fixed">
+        <Sidebar toggle={toggle} setToggle={setToggle}></Sidebar>
       </div>
 
       {/* outlet */}

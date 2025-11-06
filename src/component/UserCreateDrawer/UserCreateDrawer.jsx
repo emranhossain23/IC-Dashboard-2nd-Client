@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import Drawer from "../Drawer/Drawer";
+import Loading from "@/Dashboard/page/Loading/Loading";
 
 const UserCreateDrawer = ({ open, onClose, initialValues, refetch_users }) => {
   const [step, setStep] = useState(1);
@@ -85,7 +86,7 @@ const UserCreateDrawer = ({ open, onClose, initialValues, refetch_users }) => {
     "Client Assignment",
   ];
 
-  if (loading) return "Loading...";
+  if (loading) return <Loading></Loading>;
 
   return (
     <Drawer onClose={onClose} open={open} name={"Add User"}>

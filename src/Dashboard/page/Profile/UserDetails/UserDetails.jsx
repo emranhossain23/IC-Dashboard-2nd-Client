@@ -25,14 +25,14 @@ const UserDetails = ({ db_user, handleSubmit }) => {
         onSubmit={handleSubmit}
       >
         {(form) => (
-          <Form className="grid grid-cols-6 gap-6">
+          <Form className="grid grid-cols-6 gap-4 md:gap-6">
             <Input
               form={form}
               name={"first_name"}
               label={"First Name"}
               placeholder={"Enter your first name"}
               required={true}
-              className="col-span-3"
+              className="col-span-6 md:col-span-3"
             ></Input>
 
             <Input
@@ -41,7 +41,7 @@ const UserDetails = ({ db_user, handleSubmit }) => {
               label={"Last Name"}
               placeholder={"Enter your last name"}
               required={true}
-              className="col-span-3"
+              className="col-span-6 md:col-span-3"
             ></Input>
 
             <Input
@@ -73,10 +73,10 @@ const UserDetails = ({ db_user, handleSubmit }) => {
               label={"City"}
               name={"city"}
               placeholder={"Enter City"}
-              className="col-span-2"
+              className="col-span-6 md:col-span-2"
             ></Input>
 
-            <div className="flex flex-col gap-1.5 col-span-2">
+            <div className="flex flex-col gap-1.5 col-span-6 md:col-span-2">
               <label htmlFor="state" className="label-inline">
                 State/Province
               </label>
@@ -112,7 +112,7 @@ const UserDetails = ({ db_user, handleSubmit }) => {
               label={"Postal Code"}
               name={"postal_code"}
               placeholder={"Enter postal code (e.g., 12345, K1A 0B1)"}
-              className="col-span-2"
+              className="col-span-6 md:col-span-2"
             ></Input>
 
             <div className="text-center col-span-6">

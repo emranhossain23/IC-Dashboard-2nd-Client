@@ -38,7 +38,7 @@ const Header = ({ toggle, setToggle }) => {
   //   .filter(Boolean)
   //   .map((n) => n[0].toUpperCase())
   //   .join(" ");
-
+  
   return (
     <div className="bg-[#1A4BD2] py-2 mb-1 h-[64px] w-screen top-0 left-0 flex items-center fixed z-50">
       <div
@@ -67,7 +67,9 @@ const Header = ({ toggle, setToggle }) => {
 
       <div className="flex items-center justify-between flex-1 px-4">
         <button
-          onClick={() => setToggle(!toggle)}
+          onClick={() => {
+            setToggle(!toggle);
+          }}
           className="p-3 rounded-full hover:bg-[#2E5DDE] text-white scale-100 active:scale-95 transition duration-200"
         >
           <RxHamburgerMenu

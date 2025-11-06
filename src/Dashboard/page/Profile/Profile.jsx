@@ -39,11 +39,11 @@ const Profile = () => {
   };
 
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen">
       <PageLocation addresses={["Profile"]}></PageLocation>
 
       <div className="p-6 w-full bg-[#F9FAFB]">
-        <div className="w-3/5 mx-auto rounded-md">
+        <div className="lg:w-3/5 mx-auto rounded-md">
           <h3 className="text-3xl font-semibold mb-1.5">Profile Settings</h3>
           <p className="font-normal">
             Manage your personal information and account settings.

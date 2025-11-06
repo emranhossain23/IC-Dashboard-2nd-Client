@@ -2,8 +2,10 @@ import MenuItem from "../menuItem/MenuItem";
 import { dashboardRoutes } from "../../routes/dashboardRoutes";
 import useAuth from "../../hooks/useAuth";
 import { IoIosArrowUp } from "react-icons/io";
+import { useEffect, useRef } from "react";
 
-const Sidebar = ({ toggle }) => {
+const Sidebar = ({ toggle,setToggle }) => {
+  const dropdownRef = useRef(null);
   const {
     open: { open, id },
     setOpen,
@@ -12,6 +14,24 @@ const Sidebar = ({ toggle }) => {
     isLoading,
   } = useAuth();
 
+useEffect(() => {
+  const handleClickOutside = (e) => {
+    const isSmallScreen = window.innerWidth < 1024;
+
+    if (
+      isSmallScreen &&                     
+      dropdownRef.current && 
+      !dropdownRef.current.contains(e.target)
+    ) {
+      setToggle(true);                    
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [setToggle]);
+
+
   if (loading || isLoading) return;
 
   const perms = db_user?.permissions || {};
@@ -19,8 +39,11 @@ const Sidebar = ({ toggle }) => {
   return (
     <div>
       <div
+      ref={dropdownRef}
         className={`fixed ${
-          toggle ? "w-0 md:w-20 overflow-hidden md:overflow-visible" : "w-64 overflow-hidden absolute"
+          toggle
+            ? "w-0 md:w-20 overflow-hidden md:overflow-visible"
+            : "w-64 overflow-hidden absolute"
         } h-screen flex flex-col justify-between bg-white shadow-lg transition-all duration-300 ease-in-out`}
       >
         <nav>
@@ -73,7 +96,7 @@ const Sidebar = ({ toggle }) => {
                           {rout?.children?.map((c, cIdx) => {
                             const canRenderChild =
                               (c.label === "Users" && perms.adminSubs?.users) ||
-                              (c.label === "Add clinic") ||
+                              c.label === "Add clinic" ||
                               (c.label === "Roles" && perms.adminSubs?.roles) ||
                               (c.label === "Row Level Settings" &&
                                 perms.adminSubs?.rowLevelSettings);
@@ -105,7 +128,7 @@ const Sidebar = ({ toggle }) => {
                           {rout?.children?.map((c, cIdx) => {
                             const canRenderChild =
                               (c.label === "Users" && perms.adminSubs?.users) ||
-                              (c.label === "Add clinic") ||
+                              c.label === "Add clinic" ||
                               (c.label === "Roles" && perms.adminSubs?.roles) ||
                               (c.label === "Row Level Settings" &&
                                 perms.adminSubs?.rowLevelSettings);

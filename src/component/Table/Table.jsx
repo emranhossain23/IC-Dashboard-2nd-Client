@@ -29,7 +29,7 @@ const Table = ({ columns, data, pagination, nestedColumns, nestedData }) => {
   const end = Math.min((pageIndex + 1) * pageSize, totalRows);
 
   return (
-    <section className="w-[310px] md:min-w-[750px] lg:w-full overflow-auto">
+    <section className="w-full max-w-[310px] md:max-w-[730px] lg:max-w-none overflow-auto">
       <table className="w-full text-left text-sm border-collapse">
         <thead className="bg-[#5985FF] text-white">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -73,11 +73,8 @@ const Table = ({ columns, data, pagination, nestedColumns, nestedData }) => {
                 <tr
                   className={`bg-white text-gray-700 hover:bg-gray-50 border-b border-dashed`}
                 >
-                  {row.getVisibleCells().map((cell,idx) => (
-                    <td
-                      key={idx}
-                      className="px-3.5 py-3 align-top"
-                    >
+                  {row.getVisibleCells().map((cell, idx) => (
+                    <td key={idx} className="px-3.5 py-3 align-top">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -91,7 +88,10 @@ const Table = ({ columns, data, pagination, nestedColumns, nestedData }) => {
                   <tr className="bg-gray-50">
                     <td colSpan={columns?.length} className="p-6">
                       {nestedData?.data?.length > 0 ? (
-                        <Table data={nestedData?.data} columns={nestedColumns} />
+                        <Table
+                          data={nestedData?.data}
+                          columns={nestedColumns}
+                        />
                       ) : (
                         <div className="text-gray-500 text-sm italic text-center">
                           No data found.
@@ -105,7 +105,6 @@ const Table = ({ columns, data, pagination, nestedColumns, nestedData }) => {
           })}
         </tbody>
       </table>
-
       {/* Pagination */}
       {pagination && (
         <div className="flex items-center justify-end text-black mt-2.5 gap-2">
