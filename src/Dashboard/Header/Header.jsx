@@ -25,7 +25,7 @@ const Header = ({ toggle, setToggle }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const demoClients = Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
       name: `Client ${i + 1}`,
@@ -104,10 +104,12 @@ const Header = ({ toggle, setToggle }) => {
           {/* profile */}
           <div className="relative cursor-pointer group">
             <div className="flex items-center gap-1">
-              <div className="w-10 h-10 bg-blue-500 text-white text-sm rounded-full flex items-center justify-center">
-                {db_user?.first_name[0] + " "}
-                {db_user?.last_name[0]}
-              </div>
+              {db_user && (
+                <div className="w-10 h-10 bg-blue-500 text-white text-sm rounded-full flex items-center justify-center">
+                  {db_user?.first_name[0] + " "}
+                  {db_user?.last_name[0]}
+                </div>
+              )}
               <FaAngleDown className="text-white group-hover:rotate-180 transition duration-200" />
             </div>
 
