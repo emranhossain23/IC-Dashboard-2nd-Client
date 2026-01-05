@@ -26,6 +26,7 @@ export const userInitialValues = {
     adminSubs: { users: false, roles: false, rowLevelSettings: false },
     amberAlerts: false,
     masterReport: false,
+    KPIsReport:false,
   },
   selectedClients: [],
 };

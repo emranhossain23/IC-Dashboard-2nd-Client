@@ -8,6 +8,7 @@ import { LuLayoutDashboard, LuShieldCheck } from "react-icons/lu";
 import { RiFileSettingsLine } from "react-icons/ri";
 import { BiClinic } from "react-icons/bi";
 import { MdOutlineAddLink } from "react-icons/md";
+import { TbReportAnalytics } from "react-icons/tb";
 
 export const dashboardRoutes = [
   {
@@ -30,6 +31,11 @@ export const dashboardRoutes = [
   //   icon: GoBell,
   //   path: "amber-alerts",
   // },
+  {
+    label: "KPIs Report",
+    icon: TbReportAnalytics,
+    path: "kpis-report",
+  },
   {
     label: "Admin",
     icon: IoSettingsOutline,

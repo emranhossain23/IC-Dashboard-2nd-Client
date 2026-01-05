@@ -13,6 +13,7 @@ import Profile from "@/Dashboard/page/Profile/Profile";
 import AddClinic from "@/Dashboard/page/Admin/AddClinic/AddClinic";
 import AddUrl from "@/Dashboard/page/Admin/AddUrl/AddUrl";
 import MasterDashboard from "@/Dashboard/page/MasterDashboard/MasterDashboard";
+import KPIsReport from "@/Dashboard/page/KPIsReport/KPIsReport";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "amber-alerts",
         element: <AmberAlerts></AmberAlerts>,
+      },
+      {
+        path: "kpis-report",
+        element: <KPIsReport></KPIsReport>,
       },
       {
         path: "users",

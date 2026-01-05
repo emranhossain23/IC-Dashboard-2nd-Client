@@ -1,13 +1,17 @@
 import React from "react";
 
-const KPI = ({ label, img, value, bg, lifetime_tx_value }) => {
+const KPI = ({ label, icon: Icon, img, value, bg, lifetime_tx_value }) => {
   return (
     <div className="flex bg-white items-center gap-3 h-[125px] px-4 rounded-md shadow">
       <div
         className="h-12 w-12 rounded-full flex items-center justify-center"
         style={{ background: `${bg}` }}
       >
-        <img className="w-[50%] h-[50%] rounded-full" src={img} alt="" />
+        {Icon ? (
+          <Icon size={20} className="text-white" />
+        ) : (
+          <img className="w-[50%] h-[50%] rounded-full" src={img} alt="" />
+        )}
       </div>
       <div>
         <h4 className=" capitalize font-medium text-gray-500">{label}</h4>

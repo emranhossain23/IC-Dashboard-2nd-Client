@@ -73,6 +73,7 @@ const userValidationSchema = {
             "admin",
             "amberAlerts",
             "masterReport",
+            "KPIsReport",
           ];
           const topSelected = topLevel.some((key) => permissions[key]);
 

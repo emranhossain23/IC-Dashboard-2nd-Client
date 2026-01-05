@@ -535,6 +535,7 @@ const RolesAndPermissions = ({ form }) => {
       amberAlerts: checked,
       masterReport: checked,
       masterDashboard: checked,
+      KPIsReport: checked,
     };
     setFieldValue("permissions", basePermissions);
   };
@@ -559,6 +560,7 @@ const RolesAndPermissions = ({ form }) => {
       amberAlerts: false,
       masterReport: false,
       masterDashboard: false,
+      KPIsReport: false,
     };
 
     const updatedPermissions = {
@@ -668,9 +670,22 @@ const RolesAndPermissions = ({ form }) => {
           <label className="text-[#111827] text-sm font-semibold flex items-center gap-2 border rounded-md shadow p-4">
             <Checkbox
               checked={permissions.masterDashboard}
-              onCheckedChange={(val) => handlePermission("masterDashboard", val)}
+              onCheckedChange={(val) =>
+                handlePermission("masterDashboard", val)
+              }
             />
             Master Dashboard
+          </label>
+
+          {/* KPIsReport */}
+          <label className="text-[#111827] text-sm font-semibold flex items-center gap-2 border rounded-md shadow p-4">
+            <Checkbox
+              checked={permissions.KPIsReport}
+              onCheckedChange={(val) =>
+                handlePermission("KPIsReport", val)
+              }
+            />
+            KPIs Report
           </label>
         </div>
       </div>
