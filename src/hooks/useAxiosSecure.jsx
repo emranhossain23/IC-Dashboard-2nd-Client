@@ -9,7 +9,7 @@ export const axiosSecure = axios.create({
 });
 
 const useAxiosSecure = () => {
-  const { logOut, authReady } = useAuth();
+  const { logOut, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const useAxiosSecure = () => {
         if (
           // (err.response.status === 401 || err.response.status === 403) &&
           err.response.status === 401 &&
-          authReady
+          loading
           // err.response.status === 404
           // err.response.status === 403
         ) {
@@ -32,7 +32,7 @@ const useAxiosSecure = () => {
         return Promise.reject(err);
       },
     );
-  }, [authReady, logOut, navigate]);
+  }, [loading, logOut, navigate]);
 
   return axiosSecure;
 };

@@ -94,66 +94,67 @@ const AuthProvider = ({ children }) => {
       const { data } = await axiosCommon.get(`/user/${user?.email}`);
       return data;
     },
-    enabled: authReady && !!user?.email,
+    enabled: !!user?.email,
   });
 
-  // useEffect(() => {
-  //   const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
-  //     setUser(currentUser);
-
-  //     // localStorage
-  //     // if (currentUser) {
-  //     //   const userInfo = { email: currentUser.email };
-  //     //   axiosCommon.post("/jwt", userInfo).then((res) => {
-  //     //     if (res.data.token) {
-  //     //       localStorage.setItem("access-token", res.data.token);
-  //     //       setLoading(false);
-  //     //     }
-  //     //   });
-  //     // } else {
-  //     //   localStorage.removeItem("access-token");
-  //     //   setLoading(false);
-  //     // }
-
-  //     //cookies
-  //     if (currentUser) {
-  //       const userInfo = { email: currentUser.email };
-  //       await axiosCommon.post("/jwt", userInfo);
-  //     } else {
-  //       await axiosCommon.post("/logout");
-  //     }
-
-  //     setLoading(false);
-  //   });
-
-  //   return () => unSubscribe();
-  // }, [axiosCommon]);
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(true);
-      setAuthReady(false);
+      // localStorage
+      // if (currentUser) {
+      //   const userInfo = { email: currentUser.email };
+      //   axiosCommon.post("/jwt", userInfo).then((res) => {
+      //     if (res.data.token) {
+      //       localStorage.setItem("access-token", res.data.token);
+      //       setLoading(false);
+      //     }
+      //   });
+      // } else {
+      //   localStorage.removeItem("access-token");
+      //   setLoading(false);
+      // }
 
+      //cookies
       if (currentUser) {
         const userInfo = { email: currentUser.email };
-
         await axiosCommon.post("/jwt", userInfo);
-
         setUser(currentUser);
       } else {
         await axiosCommon.post("/logout");
         setUser(null);
       }
 
-      setAuthReady(true);
       setLoading(false);
     });
 
     return () => unSubscribe();
   }, [axiosCommon]);
 
+  // useEffect(() => {
+  //   const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+  //     // setLoading(true);
+  //     // setAuthReady(false);
+
+  //     if (currentUser) {
+  //       const userInfo = { email: currentUser.email };
+
+  //       await axiosCommon.post("/jwt", userInfo);
+
+  //       setUser(currentUser);
+  //     } else {
+  //       await axiosCommon.post("/logout");
+  //       setUser(null);
+  //     }
+
+  //     setAuthReady(true);
+  //     setLoading(false);
+  //   });
+
+  //   return () => unSubscribe();
+  // }, [axiosCommon]);
+
   const authInfo = {
     loading,
-    authReady,
+    // authReady,
     isLoading,
     isFetched,
     setLoading,

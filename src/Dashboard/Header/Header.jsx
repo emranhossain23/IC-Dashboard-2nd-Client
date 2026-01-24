@@ -164,13 +164,13 @@ import HeaderClientSelector from "@/component/HeaderClientSelector/HeaderClientS
 const Header = ({ toggle, setToggle }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { user, authReady, logOut, db_user } = useAuth();
+  const { user, loading, logOut, db_user } = useAuth();
 
   const { data: clinics = [], refetch } = useGetSecureData(
     "clinics",
     "/clinics",
     {
-      enabled: authReady && !!user,
+      enabled: loading && !!user,
     },
   );
 
