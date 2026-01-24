@@ -25,7 +25,8 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, element: <KPIsReport></KPIsReport> },
+      // { index: true, element: <KPIsReport></KPIsReport> },
+      { index: true, element: <Home></Home> },
       // {
       //   path: "master-report",
       //   element: <MasterReport></MasterReport>,
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
             <Users></Users>
           </AdminRoute>
         ),
+      },
+      {
+        path:"/KPIs-report",
+        element: <KPIsReport></KPIsReport>
       },
       {
         path: "roles",
@@ -87,9 +92,9 @@ export const router = createBrowserRouter([
         element: <Profile></Profile>,
       },
       {
-        path:"KPIs-full-report",
-        element:<KPIsReportTableFull></KPIsReportTableFull>
-      }
+        path: "KPIs-full-report",
+        element: <KPIsReportTableFull></KPIsReportTableFull>,
+      },
     ],
   },
   {

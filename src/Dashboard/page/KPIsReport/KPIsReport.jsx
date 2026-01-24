@@ -675,12 +675,11 @@ import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
+import CalendarRange from "@/component/CalendarRange/CalendarRange";
 
 const KPIsReport = () => {
   const { db_user: { permissions } = {} } = useAuth();
-
-  const [showCalendar, setShowCalendar] = useState(false);
-
+  // const [showCalendar, setShowCalendar] = useState(false);
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
@@ -693,10 +692,10 @@ const KPIsReport = () => {
     },
   ]);
 
-  const formattedRange = `${format(range[0].startDate, "MMM d")} - ${format(
-    range[0].endDate,
-    "MMM d",
-  )}`;
+  // const formattedRange = `${format(range[0].startDate, "MMM d")} - ${format(
+  //   range[0].endDate,
+  //   "MMM d",
+  // )}`;
 
   const startDate = range[0].startDate.toISOString();
   const endDate = range[0].endDate.toISOString();
@@ -1045,25 +1044,32 @@ const KPIsReport = () => {
   //   return rows;
   // }, [filteredLeads, filteredMessages]);
 
+  const rangeDays = useMemo(() => {
+    const start = new Date(range[0].startDate);
+    const end = new Date(range[0].endDate);
+
+    const diff = Math.abs(end - start);
+    return Math.ceil(diff / (1000 * 60 * 60 * 24)) + 1;
+  }, [range]);
+
+  const daysToShow = rangeDays > 30 ? 30 : rangeDays;
+  
   const last30DaysKpiRows = useMemo(() => {
     const rows = [];
 
-    for (let i = 0; i < 30; i++) {
+    // start from end date and go backwards
+    for (let i = 0; i < daysToShow; i++) {
       const day = new Date(baseDate);
       day.setDate(day.getDate() - i);
 
-      const start = new Date(day);
-      start.setHours(0, 0, 0, 0);
-
-      const end = new Date(day);
-      end.setHours(23, 59, 59, 999);
+      const dayKey = format(day, "yyyy-MM-dd");
 
       const dailyLeads = filteredLeads.filter(
-        (l) => new Date(l.createdAt) >= start && new Date(l.createdAt) <= end,
+        (l) => format(new Date(l.createdAt), "yyyy-MM-dd") === dayKey,
       );
 
       const dailyMessages = filteredMessages.filter(
-        (m) => new Date(m.dateAdded) >= start && new Date(m.dateAdded) <= end,
+        (m) => format(new Date(m.dateAdded), "yyyy-MM-dd") === dayKey,
       );
 
       const inboundCalls = dailyMessages.filter(
@@ -1102,7 +1108,88 @@ const KPIsReport = () => {
     }
 
     return rows;
-  }, [filteredLeads, filteredMessages, baseDate]);
+  }, [
+    filteredLeads,
+    filteredMessages,
+    baseDate,
+    daysToShow,
+    conversationPipelineStageIdSet,
+    bookingPipelineStageIdSet,
+    showingPipelineStageIdSet,
+    closePipelineStageIdSet,
+  ]);
+
+  // const last30DaysKpiRows = useMemo(() => {
+  //   const rows = [];
+
+  //   for (let i = 0; i < 30; i++) {
+  //     const day = new Date(baseDate);
+  //     day.setDate(day.getDate() - i);
+
+  //     const start = new Date(day);
+  //     start.setHours(0, 0, 0, 0);
+
+  //     const end = new Date(day);
+  //     end.setHours(23, 59, 59, 999);
+
+  //     const dailyLeads = filteredLeads.filter(
+  //       (l) => new Date(l.createdAt) >= start && new Date(l.createdAt) <= end,
+  //     );
+
+  //     const dailyMessages = filteredMessages.filter(
+  //       (m) => new Date(m.dateAdded) >= start && new Date(m.dateAdded) <= end,
+  //     );
+
+  //     // const day = new Date(baseDate);
+  //     // day.setDate(day.getDate() - i);
+
+  //     // const dayKey = format(day, "yyyy-MM-dd");
+
+  //     // const dailyLeads = filteredLeads.filter(
+  //     //   (l) => format(new Date(l.createdAt), "yyyy-MM-dd") === dayKey,
+  //     // );
+
+  //     // const dailyMessages = filteredMessages.filter(
+  //     //   (m) => format(new Date(m.dateAdded), "yyyy-MM-dd") === dayKey,
+  //     // );
+
+  //     const inboundCalls = dailyMessages.filter(
+  //       (m) => m.direction === "inbound" && m.messageType === "TYPE_CALL",
+  //     );
+
+  //     const answeredCalls = inboundCalls.filter(
+  //       (c) => c.status === "completed",
+  //     );
+
+  //     rows.push({
+  //       date: day.toLocaleDateString(),
+  //       totalLead: dailyLeads.length,
+  //       inboundCallRate: inboundCalls.length
+  //         ? ((answeredCalls.length / inboundCalls.length) * 100).toFixed(2)
+  //         : "0.00",
+  //       conversion: dailyLeads.filter((l) =>
+  //         conversationPipelineStageIdSet.has(l.pipelineStageId),
+  //       ).length,
+  //       booking: dailyLeads.filter((l) =>
+  //         bookingPipelineStageIdSet.has(l.pipelineStageId),
+  //       ).length,
+  //       showing: dailyLeads.filter((l) =>
+  //         showingPipelineStageIdSet.has(l.pipelineStageId),
+  //       ).length,
+  //       close: dailyLeads.filter((l) =>
+  //         closePipelineStageIdSet.has(l.pipelineStageId),
+  //       ).length,
+  //       avgCall: hoursToDayTime(
+  //         calculateAvgFirstResponseTime(dailyLeads, dailyMessages, "TYPE_CALL"),
+  //       ),
+  //       avgSms: hoursToDayTime(
+  //         calculateAvgFirstResponseTime(dailyLeads, dailyMessages, "TYPE_SMS"),
+  //       ),
+  //     });
+  //   }
+
+  //   return rows;
+  // }, [filteredLeads, filteredMessages, baseDate]);
 
   if (opporLoading || convLoading) return <Loading />;
   // if (!selectedClinics.length) {
@@ -1114,22 +1201,23 @@ const KPIsReport = () => {
     <div>
       <div className="flex justify-end mb-4">
         <div className="relative">
-          <button
+          {/* <button
             onClick={() => setShowCalendar(!showCalendar)}
             className="border px-3 w- h-9 rounded-md text-sm bg-white shadow-sm"
           >
             📅 {formattedRange}
-          </button>
-          {showCalendar && (
-            <div className="absolute z-50 right-0 top-10">
-              <DateRange
-                editableDateInputs={true}
-                onChange={(item) => setRange([item.selection])}
-                moveRangeOnFirstSelection={true}
-                ranges={range}
-              />
-            </div>
-          )}
+          </button> */}
+          {/* {showCalendar && (
+            // <div className="absolute z-50 right-0 top-10">
+            //   <DateRange
+            //     editableDateInputs={true}
+            //     onChange={(item) => setRange([item.selection])}
+            //     moveRangeOnFirstSelection={true}
+            //     ranges={range}
+            //   />
+            // </div>
+          // )} */}
+          <CalendarRange range={range} setRange={setRange}></CalendarRange>
         </div>
       </div>
 

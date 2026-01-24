@@ -2,6 +2,7 @@ import ClientSelector from "@/component/ClientSelector/ClientSelector";
 import Notice from "@/component/Notice/Notice";
 import Table from "@/component/Table/Table";
 import { Checkbox } from "@/components/ui/checkbox";
+import useGetSecureData from "@/hooks/useGetSecureData";
 import { createColumnHelper } from "@tanstack/react-table";
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
@@ -14,18 +15,18 @@ const ClientAssignment = ({
   notice,
 }) => {
   const [open, setOpen] = useState(false);
-  const [clients, setClients] = useState([]);
   const dropdownRef = useRef(null);
   const columnHelper = createColumnHelper();
+  const { data: clinicsData = [] } = useGetSecureData(
+    "clinics",
+    "/clinics",
+  );
 
-  // Demo clients
-  useEffect(() => {
-    const demoClients = Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      name: `Client ${i + 1}`,
-    }));
-    setClients(demoClients);
-  }, []);
+  const clinics = clinicsData.map((c) => ({
+    id: c._id,
+    name: c.name,
+    email: c.email,
+  }));
 
   // Outside click
   useEffect(() => {
@@ -49,7 +50,7 @@ const ClientAssignment = ({
               [type]: value,
             },
           }
-        : client
+        : client,
     );
     form.setFieldValue("selectedClients", updatedClients);
   };
@@ -136,17 +137,18 @@ const ClientAssignment = ({
         <div className="absolute top-10 left-0">
           <ClientSelector
             open={open}
-            clients={clients}
+            clients={clinics}
             selectedClients={form.values.selectedClients || []}
             setSelectedClients={(val) => {
               const updated = val.map((c) => {
                 const existing = form.values.selectedClients?.find(
-                  (item) => item.id === c.id
+                  (item) => item.id === c.id,
                 );
                 return (
                   existing || {
                     id: c.id,
                     name: c.name,
+                    email: c.email,
                     permission: {
                       read: false,
                       write: false,

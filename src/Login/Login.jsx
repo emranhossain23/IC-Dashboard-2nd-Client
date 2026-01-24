@@ -26,7 +26,6 @@ const Login = () => {
   };
 
   const handleSubmit = async ({ email, password }) => {
-    console.log(email, password);
     setErrMsg("");
 
     try {

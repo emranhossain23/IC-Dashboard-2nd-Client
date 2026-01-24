@@ -11,11 +11,11 @@ import { MdOutlineAddLink } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 
 export const dashboardRoutes = [
-  // {
-  //   label: "Dashboard",
-  //   icon: AiOutlineDashboard,
-  //   path: "/",
-  // },
+  {
+    label: "Dashboard",
+    icon: AiOutlineDashboard,
+    path: "/",
+  },
   // {
   //   label: "Master Report",
   //   icon: FaRegFileAlt,
@@ -31,10 +31,15 @@ export const dashboardRoutes = [
   //   icon: GoBell,
   //   path: "amber-alerts",
   // },
+  // {
+  //   label: "KPIs Report",
+  //   icon: TbReportAnalytics,
+  //   path: "/",
+  // },
   {
     label: "KPIs Report",
     icon: TbReportAnalytics,
-    path: "/",
+    path: "/KPIs-report",
   },
   {
     label: "Admin",

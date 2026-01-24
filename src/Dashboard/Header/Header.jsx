@@ -159,10 +159,10 @@ import ClientSelector from "../../component/ClientSelector/ClientSelector";
 import logoSml from "../../assets/dental-image-removebg-preview.png";
 import useAuth from "@/hooks/useAuth";
 import useGetSecureData from "@/hooks/useGetSecureData";
+import HeaderClientSelector from "@/component/HeaderClientSelector/HeaderClientSelector";
 
 const Header = ({ toggle, setToggle }) => {
   const [open, setOpen] = useState(false);
-  const [selectedClients, setSelectedClients] = useState([]);
   const dropdownRef = useRef(null);
 
   const { user, logOut, db_user } = useAuth();
@@ -221,11 +221,10 @@ const Header = ({ toggle, setToggle }) => {
             </button>
 
             <div className="absolute top-11 right-0">
-              <ClientSelector
+              <HeaderClientSelector
                 open={open}
                 clients={clinics}
                 selectedClients={selectedClinics}
-                setSelectedClients={setSelectedClients}
                 refetch={refetch}
               />
             </div>

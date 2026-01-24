@@ -15,7 +15,7 @@ const CustomSelect = ({
   handleRoleChange,
 }) => {
   const { values, errors, touched, setFieldValue } = form;
-  console.log(values[name]);
+  // console.log(values[name]);
 
   return (
     <>
