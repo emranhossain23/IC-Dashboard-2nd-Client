@@ -676,29 +676,57 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import CalendarRange from "@/component/CalendarRange/CalendarRange";
+import axios from "axios";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 const KPIsReport = () => {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   const { db_user: { permissions } = {}, user, loading } = useAuth();
-  // const [showCalendar, setShowCalendar] = useState(false);
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
   const [range, setRange] = useState([
     {
-      // startDate: new Date("2020-01-01T10:50:01.000Z"),
       startDate: oneMonthAgo,
       endDate: new Date(),
       key: "selection",
     },
   ]);
 
-  // const formattedRange = `${format(range[0].startDate, "MMM d")} - ${format(
-  //   range[0].endDate,
-  //   "MMM d",
-  // )}`;
+  // row
+  // const startDate = dayjs
+  //   .tz(dayjs(range[0].startDate).format("YYYY-MM-DD"), "America/New_York")
+  //   .startOf("day")
+  //   .toISOString();
+  // const endDate = dayjs
+  //   .tz(dayjs(range[0].endDate).format("YYYY-MM-DD"), "America/New_York")
+  //   .endOf("day")
+  //   .toISOString();
+  // console.log(startDate, endDate);
 
-  const startDate = range[0].startDate.toISOString();
-  const endDate = range[0].endDate.toISOString();
+  // const startDate = range[0].startDate.toISOString();
+  // const endDate = range[0].endDate.toISOString();
+  // console.log(new Date(startDate),new Date(endDate));
+
+  // *****
+  const startDate = dayjs(range[0].startDate).format("YYYY-MM-DD");
+  const endDate = dayjs(range[0].endDate).format("YYYY-MM-DD");
+
+  // const startDate = dayjs(range[0].startDate).tz("America/New_York").toISOString();
+  // const endDate = dayjs(range[0].endDate).tz("America/New_York").toISOString();
+
+  // const startDate = dayjs(range[0].startDate)
+  //   .tz("America/New_York")
+  //   .utc()
+  //   .format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]");
+
+  // const endDate = dayjs(range[0].endDate)
+  //   .tz("America/New_York")
+  //   .utc()
+  //   .format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]");
 
   const axiosSecure = useAxiosSecure();
 
@@ -709,6 +737,12 @@ const KPIsReport = () => {
     () => clinics.filter((c) => c.selected),
     [clinics],
   );
+
+  const selectedClinicIds = useMemo(
+    () => selectedClinics.map((clinic) => clinic._id),
+    [selectedClinics],
+  );
+  // console.log(selectedClinicIds);
 
   /* ---------------- helper ---------------- */
   const mergePipelineIds = (clinics, key) =>
@@ -735,42 +769,71 @@ const KPIsReport = () => {
     [selectedClinics],
   );
 
-  const selectedClinicPipelineIds = useMemo(
-    () => new Set(selectedClinics.map((c) => c.pipeline_id)),
-    [selectedClinics],
-  );
+  // const selectedClinicPipelineIds = useMemo(
+  //   () => new Set(selectedClinics.map((c) => c.pipeline_id)),
+  //   [selectedClinics],
+  // );
 
   /* ---------------- data fetch ---------------- */
+  // const { data: leads = [], isLoading: opporLoading } = useQuery({
+  //   queryKey: ["opportunities", startDate, endDate,selectedClinicIds],
+  //   queryFn: async () => {
+  //     const { data } = await axiosSecure.get(
+  //       `/opportunities?from=${startDate}&to=${endDate}&clinicIds=${selectedClinicIds}`,
+  //     );
+  //     return data;
+  //   },
+  //   enabled: !loading && !!user,
+  // });
   const { data: leads = [], isLoading: opporLoading } = useQuery({
-    queryKey: ["opportunities", startDate, endDate],
+    queryKey: ["opportunities", startDate, endDate, selectedClinicIds],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `/opportunities?from=${startDate}&to=${endDate}`,
-      );
+      const { data } = await axiosSecure.get("/opportunities", {
+        params: {
+          from: startDate,
+          to: endDate,
+          clinicIds: JSON.stringify(selectedClinicIds),
+        },
+      });
       return data;
     },
     enabled: !loading && !!user,
   });
+  // console.log(leads);
 
+  // const { data: messages = [], isLoading: convLoading } = useQuery({
+  //   queryKey: ["messages", startDate, endDate],
+  //   queryFn: async () => {
+  //     const { data } = await axiosSecure.get(
+  //       `/messages?from=${startDate}&to=${endDate}&clinicId=696dfd4719d8c1c8737994b2`,
+  //     );
+  //     return data;
+  //   },
+  //   enabled: !loading && !!user,
+  // });
   const { data: messages = [], isLoading: convLoading } = useQuery({
-    queryKey: ["messages", startDate, endDate],
+    queryKey: ["messages", startDate, endDate, selectedClinicIds],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `/messages?from=${startDate}&to=${endDate}`,
-      );
+      const { data } = await axiosSecure.get("/messages", {
+        params: {
+          from: startDate,
+          to: endDate,
+          clinicIds: JSON.stringify(selectedClinicIds),
+        },
+      });
       return data;
     },
     enabled: !loading && !!user,
   });
 
   /* ---------------- filtered leads (multi clinic) ---------------- */
-  const selectedClinicIds = useMemo(
-    () =>
-      new Set(
-        clinics.filter((c) => c.selected === true).map((c) => String(c._id)),
-      ),
-    [clinics],
-  );
+  // const selectedClinicIds = useMemo(
+  //   () =>
+  //     new Set(
+  //       clinics.filter((c) => c.selected === true).map((c) => String(c._id)),
+  //     ),
+  //   [clinics],
+  // );
 
   // ***
   // const selectedClinicIdsArray = clinics.map((clinic) => clinic._id);
@@ -783,17 +846,13 @@ const KPIsReport = () => {
   // });
   // // console.log(check);
 
-  const filteredLeads = useMemo(() => {
-    return leads.filter(
-      (lead) =>
-        selectedClinicIds.has(String(lead.clinicId)) &&
-        selectedClinicPipelineIds.has(lead.pipelineId),
-    );
-  }, [leads, selectedClinicIds]);
+  // const filteredLeads = useMemo(() => {
+  //   return leads.filter((lead) => selectedClinicIds.has(String(lead.clinicId)));
+  // }, [leads, selectedClinicIds]);
 
-  const filteredMessages = useMemo(() => {
-    return messages.filter((m) => selectedClinicIds.has(String(m.clinicId)));
-  }, [messages, selectedClinicIds]);
+  // const filteredMessages = useMemo(() => {
+  //   return messages.filter((m) => selectedClinicIds.has(String(m.clinicId)));
+  // }, [messages, selectedClinicIds]);
 
   // const unSelectedClinicIds = useMemo(
   //   () =>
@@ -831,7 +890,11 @@ const KPIsReport = () => {
   // }, [messages]);
 
   /* ---------------- KPIs ---------------- */
-  const newLeads = filteredLeads;
+  // const newLeads = filteredLeads;
+  const newLeads = leads;
+  const filteredLeads = leads;
+
+  const filteredMessages = messages;
 
   const totalInboundCalls = filteredMessages.filter(
     (m) => m.direction === "inbound" && m.messageType === "TYPE_CALL",
@@ -1056,23 +1119,39 @@ const KPIsReport = () => {
 
   const daysToShow = rangeDays > 30 ? 30 : rangeDays;
 
+  const groupByLocalDay = (items, dateField) => {
+    const map = new Map();
+
+    for (const item of items) {
+      const tz = item.clinicTimezone || "UTC";
+
+      const key = dayjs(item[dateField]).tz(tz).format("YYYY-MM-DD");
+
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(item);
+    }
+
+    return map;
+  };
+
+  const leadMap = useMemo(
+    () => groupByLocalDay(filteredLeads, "createdAt"),
+    [filteredLeads],
+  );
+
+  const messageMap = useMemo(
+    () => groupByLocalDay(filteredMessages, "dateAdded"),
+    [filteredMessages],
+  );
+
   const last30DaysKpiRows = useMemo(() => {
     const rows = [];
 
-    // start from end date and go backwards
     for (let i = 0; i < daysToShow; i++) {
-      const day = new Date(baseDate);
-      day.setDate(day.getDate() - i);
+      const dayKey = dayjs(baseDate).subtract(i, "day").format("YYYY-MM-DD");
 
-      const dayKey = format(day, "yyyy-MM-dd");
-
-      const dailyLeads = filteredLeads.filter(
-        (l) => format(new Date(l.createdAt), "yyyy-MM-dd") === dayKey,
-      );
-
-      const dailyMessages = filteredMessages.filter(
-        (m) => format(new Date(m.dateAdded), "yyyy-MM-dd") === dayKey,
-      );
+      const dailyLeads = leadMap.get(dayKey) || [];
+      const dailyMessages = messageMap.get(dayKey) || [];
 
       const inboundCalls = dailyMessages.filter(
         (m) => m.direction === "inbound" && m.messageType === "TYPE_CALL",
@@ -1083,7 +1162,7 @@ const KPIsReport = () => {
       );
 
       rows.push({
-        date: day.toLocaleDateString(),
+        date: dayKey,
         totalLead: dailyLeads.length,
         inboundCallRate: inboundCalls.length
           ? ((answeredCalls.length / inboundCalls.length) * 100).toFixed(2)
@@ -1110,50 +1189,28 @@ const KPIsReport = () => {
     }
 
     return rows;
-  }, [
-    filteredLeads,
-    filteredMessages,
-    baseDate,
-    daysToShow,
-    conversationPipelineStageIdSet,
-    bookingPipelineStageIdSet,
-    showingPipelineStageIdSet,
-    closePipelineStageIdSet,
-  ]);
+  }, [leadMap, messageMap, baseDate, daysToShow]);
 
+  // a clinic
   // const last30DaysKpiRows = useMemo(() => {
   //   const rows = [];
 
-  //   for (let i = 0; i < 30; i++) {
-  //     const day = new Date(baseDate);
-  //     day.setDate(day.getDate() - i);
+  //   for (let i = 0; i < daysToShow; i++) {
+  //     const day = dayjs(baseDate).subtract(i, "day");
 
-  //     const start = new Date(day);
-  //     start.setHours(0, 0, 0, 0);
-
-  //     const end = new Date(day);
-  //     end.setHours(23, 59, 59, 999);
+  //     const dayKey = day.format("YYYY-MM-DD");
 
   //     const dailyLeads = filteredLeads.filter(
-  //       (l) => new Date(l.createdAt) >= start && new Date(l.createdAt) <= end,
+  //       (l) =>
+  //         dayjs(l.createdAt).tz(l.clinicTimezone).format("YYYY-MM-DD") ===
+  //         dayKey,
   //     );
 
   //     const dailyMessages = filteredMessages.filter(
-  //       (m) => new Date(m.dateAdded) >= start && new Date(m.dateAdded) <= end,
+  //       (m) =>
+  //         dayjs(m.dateAdded).tz(m.clinicTimezone).format("YYYY-MM-DD") ===
+  //         dayKey,
   //     );
-
-  //     // const day = new Date(baseDate);
-  //     // day.setDate(day.getDate() - i);
-
-  //     // const dayKey = format(day, "yyyy-MM-dd");
-
-  //     // const dailyLeads = filteredLeads.filter(
-  //     //   (l) => format(new Date(l.createdAt), "yyyy-MM-dd") === dayKey,
-  //     // );
-
-  //     // const dailyMessages = filteredMessages.filter(
-  //     //   (m) => format(new Date(m.dateAdded), "yyyy-MM-dd") === dayKey,
-  //     // );
 
   //     const inboundCalls = dailyMessages.filter(
   //       (m) => m.direction === "inbound" && m.messageType === "TYPE_CALL",
@@ -1164,7 +1221,7 @@ const KPIsReport = () => {
   //     );
 
   //     rows.push({
-  //       date: day.toLocaleDateString(),
+  //       date: day.format("MM/DD/YYYY"),
   //       totalLead: dailyLeads.length,
   //       inboundCallRate: inboundCalls.length
   //         ? ((answeredCalls.length / inboundCalls.length) * 100).toFixed(2)
@@ -1191,34 +1248,38 @@ const KPIsReport = () => {
   //   }
 
   //   return rows;
-  // }, [filteredLeads, filteredMessages, baseDate]);
+  // }, [filteredLeads, filteredMessages, baseDate, daysToShow]);
 
   if (opporLoading || convLoading) return <Loading />;
   // if (!selectedClinics.length) {
   //   return <Loading />;
   // }
 
+  // let config = {
+  //   method: "get",
+  //   maxBodyLength: Infinity,
+  //   url: "https://services.leadconnectorhq.com/opportunities/search?location_id=HgiBOaKxNEO2RVYbuTf1&pipeline_id=nomfM2sEp0psPHRdrSRU&endDate=01-11-2026&date=01-11-2026&limit=100",
+  //   headers: {
+  //     Accept: "application/json",
+  //     Version: "2021-07-28",
+  //     Authorization: "Bearer pit-30babb36-fc7b-4715-8fe3-92f87956ee64",
+  //   },
+  // };
+
+  // axios
+  //   .request(config)
+  //   .then((response) => {
+  //     console.log(console.log(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
   /* ---------------- UI ---------------- */
   return (
     <div>
       <div className="flex justify-end mb-4">
         <div className="relative">
-          {/* <button
-            onClick={() => setShowCalendar(!showCalendar)}
-            className="border px-3 w- h-9 rounded-md text-sm bg-white shadow-sm"
-          >
-            📅 {formattedRange}
-          </button> */}
-          {/* {showCalendar && (
-            // <div className="absolute z-50 right-0 top-10">
-            //   <DateRange
-            //     editableDateInputs={true}
-            //     onChange={(item) => setRange([item.selection])}
-            //     moveRangeOnFirstSelection={true}
-            //     ranges={range}
-            //   />
-            // </div>
-          // )} */}
           <CalendarRange range={range} setRange={setRange}></CalendarRange>
         </div>
       </div>

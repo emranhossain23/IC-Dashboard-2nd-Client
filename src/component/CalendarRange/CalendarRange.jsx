@@ -270,7 +270,7 @@ const CalendarRange = ({ range, setRange }) => {
               size="small"
               onClick={() => {
                 setTempValue([]);
-                setRange(null);
+                setRange(range);
                 setOpen(false);
               }}
             >
