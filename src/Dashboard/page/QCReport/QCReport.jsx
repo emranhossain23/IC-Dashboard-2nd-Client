@@ -234,12 +234,12 @@ const QCReport = () => {
 
   const columns = [
     columnHelper.accessor("office", {
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span className="text-nowrap">{info.getValue()}</span>,
       header: "Office",
     }),
 
     columnHelper.accessor("setter", {
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span className="text-nowrap">{info.getValue()}</span>,
       header: "setter",
     }),
 
@@ -272,7 +272,7 @@ const QCReport = () => {
       header: "set/day",
     }),
     columnHelper.accessor("lead_to_schedule_ratio", {
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span>{info.getValue()} %</span>,
       header: "lead to schedule ratio",
     }),
     columnHelper.accessor("inbound_calls_total", {
@@ -286,7 +286,7 @@ const QCReport = () => {
     columnHelper.accessor("IBAR", {
       cell: (info) => (
         <span
-          className={`${info.getValue() <= 20 ? "bg-red-200" : ""} inline-block px-2 py-0.5`}
+          className={`${info.getValue() <= 80 ? "bg-red-200" : ""} inline-block px-2 py-0.5`}
         >
           {info.getValue()}%
         </span>
@@ -308,7 +308,7 @@ const QCReport = () => {
     columnHelper.accessor("percentage_of_leads_w_thirty_plus_mins", {
       cell: (info) => (
         <span
-          className={`${info.getValue() > 20 ? "bg-red-200" : ""} inline-block px-2 py-0.5`}
+          className={`${info.getValue() > 20 ? "bg-red-200" : ""} inline-block px-10 py-0.5`}
         >
           {info.getValue()}%
         </span>
