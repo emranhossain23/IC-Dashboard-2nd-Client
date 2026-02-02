@@ -241,9 +241,9 @@ const AddClinic = () => {
                 ></Input>
 
                 {/* calendar ID */}
-                <div className="col-span-4">
+                {/* <div className="col-span-4">
                   <CalendarID form={form}></CalendarID>
-                </div>
+                </div> */}
 
                 <div className="col-span-4">
                   <PipelineFieldArray
